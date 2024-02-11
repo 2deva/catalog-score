@@ -1,0 +1,169 @@
+body {
+    font-family: 'Commissioner', sans-serif;
+    background-image: url("/static/images/bg.jpg");
+    margin: 0;
+    padding: 0;
+    background-color: #e9e8e6;
+    color: #000000;
+    position: center2
+}
+
+    /* Container Styles */
+    .container {
+        width: 1100px;
+        height: 100%x;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.5); /* White background with 50% opacity */
+        border-radius: 25px;
+        box-shadow: 0 40px 40px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        position: center;
+    }  
+    
+    /* Title Styles */
+    .title-container {
+        text-align: center;
+        margin-left: 150px;
+    }
+    .log {
+        color: #3f9544; /* Change to the color you want */
+    }
+    .title-container h1 {
+        width: 800px;
+        font-weight: 350;
+        font-size: 3.5em;
+        border-radius: 25px;
+        padding: 5px;
+    }
+/* Style the navigation bar */
+#navbar {
+    width: calc(90% - 15px);
+    background-color: #e9e8e6;
+    color: #000000;
+    padding: 15px 0;
+    border-radius: 15px;
+    border: #000000 1.5px solid;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    margin-left: 70px;
+}
+
+/* Style the list */
+#navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+/* Style the links */
+#navbar a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 20px;
+    display: flex; /* Use Flexbox */
+    align-items: center; /* Center the text and icons vertically */
+    gap: 5px; /* Add some space between the text and icons */
+}
+
+/* Change the color of the links when hovered over */
+#navbar a:hover {
+    color: #3f9544;
+}
+/* Style the list items */
+#navbar li {
+align-items: left;
+font-size: 20px;
+font-weight: 500;
+}
+
+/* Style the Material Icons */
+.material-icons {
+    font-size: 20px; /* Change the size of the icons */
+    color: #000000; /* Change the color of the icons */
+    align-items: center;
+}
+
+/* Change the color of the icons when hovered over */
+.material-icons:hover {
+    color: #3f9544;
+}
+
+
+#single-product-score-form {
+    display: none;
+    /* Other styles */
+}
+input[type="submit"] {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #000000;
+    padding: 10px 32px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 1.5px solid #000000;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    margin-left: 10px;
+}
+[type="submit"]:hover {
+    background-color: #84e195;
+}
+
+form {
+    margin-top: 20px;
+    text-align: center;
+    display: none;
+}
+
+input[type="text"] {
+    width: 73%;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 1.5px solid #000000;
+    margin-right: 10px;
+}
+
+.product-data,
+.score-container {
+    display: block; /* Changed from inline-block to block */
+    margin-top: 30px;
+    margin-left: 70px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: calc(90% - 15px);
+    box-sizing: border-box;
+}
+
+.result {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+    font-size: 20px;
+}
+
+.result p {
+    margin: 5px 0;
+}
+
+.image-gallery {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.image-gallery img {
+    max-width: 300px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.image-gallery img:hover {
+    transform: scale(1.1);
+}

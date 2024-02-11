@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog Scoring</title>
+    <link rel="icon" href="/static/images/logo.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Commissioner:200,300,400,500,600,700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">    
+</head>
+<body>
+<div class="container">
+    <div class="title-container">
+        <h1><a href="https://catalogscore.site" style="text-decoration: none; color: inherit;">Cata<span class="log">log</span> Score<span style="font-size: 35px;">.site</span></a></h1>
+    </div>
+<div id="buttons-container">
+    <!-- Wrapper for Button and Form -->
+    <div class="button-form-wrapper">
+        <!-- Single Product Score Button -->
+        <div id="single-product-score-button" class="button-container clickable">
+            <span class="material-icons">task_alt</span>
+            <span class="text">Score For Sample Product</span>
+        </div>
+        <!-- Scrape Catalog Data -->
+        <div id="collect-catalog-button" class="button-container clickable">
+            <span class="material-icons">web</span>
+            <span class="text">Scrape Catalog From Web</span>
+        </div>
+        <!-- Catalog Score Button -->
+        <div id="catalog-score-button" class="button-container clickable">
+            <span class="material-icons">auto_stories</span>
+            <span class="text">Check Catalog Collections</span>
+        </div>
+    </div>
+</div>
+<!-- Single Product Score Form -->
+<div id="form-box" class="form-box" style="display: none;">
+    <h2>Product Score</h2> <!-- Heading -->
+    <form id="single-product-score-form" class="search-form" action="/score" method="post">
+        <input type="text" id="product_url" name="product_url" placeholder="Enter Product URL">
+        <input type="submit" value="Score">
+        <span class="close" onclick="closeForm()">&times;</span> <!-- Close icon -->
+        <div class="info-icon">
+            <i class="material-icons">info</i>
+            <span class="tooltip">Only Meesho URL accepted: https://ondc.meesho.org/</span>
+        </div>
+    </form>
+    <div id="error-message" class="error-message">Invalid URL. Only Meesho URLs are accepted.</div>
+</div>
+<!-- Scrape Catalog Data Form -->
+<div id="form-box2" class="form-box" style="display: none;">
+    <h2>Scrape Catalog Data</h2> <!-- Heading -->
+    <form id="scrape-catalog-form" class="search-form" action="/scrape" method="post">
+        <input type="text" id="catalog_url" name="catalog_url" placeholder="Catalog URL" required>
+        <input type="hidden" id="database_name" name="database_name" placeholder="Database Name" value="catalog" >
+        <input type="text" name="collection_name" placeholder="Catalog Name" required>
+        <input id="submit" type="submit" value="Scrape">
+        <span class="close" onclick="closeForm()">&times;</span> <!-- Close icon -->
+    </form>
+    <div id="error-message2" class="error-message">Invalid URL. Only Meesho Catalogs are accepted.</div>
+            <!-- Loading animation -->
+            <div id="loading-animation" style="display: none">
+                <div class="loader">
+                    <div>
+                      <ul>
+                        <li>
+                          <svg fill="currentColor" viewBox="0 0 90 120">
+                            <path d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z"></path>
+                          </svg>
+                        </li>
+                        <li>
+                          <svg fill="currentColor" viewBox="0 0 90 120">
+                            <path d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z"></path>
+                          </svg>
+                        </li>
+                        <li>
+                          <svg fill="currentColor" viewBox="0 0 90 120">
+                            <path d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z"></path>
+                          </svg>
+                        </li>
+                        <li>
+                          <svg fill="currentColor" viewBox="0 0 90 120">
+                            <path d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z"></path>
+                          </svg>
+                        </li>
+                        <li>
+                          <svg fill="currentColor" viewBox="0 0 90 120">
+                            <path d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z"></path>
+                          </svg>
+                        </li>
+                        <li>
+                          <svg fill="currentColor" viewBox="0 0 90 120">
+                            <path d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z"></path>
+                          </svg>
+                        </li>
+                      </ul>
+                    </div><span>Scraping...</span>
+                </div>
+        </div>
+</div>
+  
+<!-- Show collections -->
+<div id="form-box3" class="form-box" style="display: none;">
+    <h2>Catalogs Collection</h2> 
+    <form id="catalogs-form" class="search-form" action="/catalog" method="post">
+        <select name="collection_name" id="collection_name" class="select-box">
+            <!-- Options will be populated dynamically -->
+        </select>        
+        <input type="submit" value="Display">
+        <span class="close" onclick="closeForm()">&times;</span> <!-- Close icon -->
+    </form>
+</div>
+
+</div>
+</div>
+<script src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+</html>

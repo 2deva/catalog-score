@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Score</title>
+    <link rel="icon" href="/static/images/logo.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='sps.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Commissioner:200,300,400,500,600,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+
+    <div class="container">
+        <div class="title-container">
+            <h1><a href="https://catalogscore.site" style="text-decoration: none; color: inherit;">Cata<span class="log">log</span> Score<span style="font-size: 25px;">.site</span></a></h1>
+        </div>
+        <!-- Navigation Bar -->
+        <nav id="navbar">
+            <ul>
+                <li><a href="/"><span class="material-icons">home</span>Home</a></li>
+                <li><a href="#" id="search-icon">Product Search<span class="material-icons">search</span></a></li>
+            </ul>
+        </nav>
+        <form id="single-product-score-form" class="search-form" action="/score" method="post">
+            <input type="text" name="product_url" placeholder="Enter Product URL">
+            <input type="submit" value="Score">
+        </form>
+                {% if product_data %}
+                <div class="product-data">
+                    <h2>Product Data</h2>
+                    <div class="result">
+                        <p><strong>Title:</strong> {{ product_data.title }} </p>
+                        <p><strong>Price:</strong> {{ product_data.price }}</p>
+                        <p><strong>Seller:</strong> {{ product_data.seller_name }}</p>
+                        <p><strong>Images:</strong></p>
+                        <div class="image-gallery">
+                            {% for image_url in product_data['image'].values() %}
+                                <img src="{{ image_url['url'] }}" alt="Product Image">
+                            {% endfor %}
+                        </div>
+                        <p><strong>Product Details:</strong></p>
+                        <ul>
+                        </ul>
+                        {% for key, value in product_data.product_details.items() %}
+                            <ul>
+                                <li><strong>{{ key }}:</strong> {{ value }}</li>
+                            </ul>
+                        {% endfor %}
+                        </ul>
+                        <p><strong>Total Score:</strong> {{ product_score.total_score }}</p>
+                    </div>
+                </div>
+                
+                <!-- Score Display -->
+                <div class="score-container">
+                    <h2>Product Score:</h2>
+                    <div class="result">
+                        {% if product_score %}
+                        <p><strong>Completenes Score:</strong> {{ product_score.completeness_score }}</p>
+                        <p><strong>Correctness Score:</strong> {{ product_score.correctness_score }}</p>
+                        <p><strong>Compliance Score:</strong> {{ product_score.compliance_score }}</p>
+                        <p><strong>Total Score:</strong> {{ product_score.total_score }}</p>
+                        {% else %}
+                            <p>No product score found.</p>
+                        {% endif %}
+               {% endif %}
+                    </div>
+                </div>
+
+<script>
+                    function showSearchForm() {
+                        // Show the form
+                        document.getElementById('single-product-score-form').style.display = 'block';
+                    }
+                    document.getElementById('search-icon').addEventListener('click', function(event) {
+                        // Prevent the default action
+                        event.preventDefault();
+
+                        // Call the function
+                        showSearchForm();
+                    });
+</script>
+</body>
+</html>
