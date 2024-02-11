@@ -1,6 +1,6 @@
 # https://catalogscore.site/
 
-## This a website designed for Buyer Apps in ONDC to Score the Seller Catalogs.
+## This is a website designed for Buyer Apps in ONDC to Score the Seller Catalogs.
 ## For this Project We took "Meesho" as our client. We Scored Products from the perspective of Meesho Buyer App. 
     ## our website has three pages.
         ## First page shows the complete product details and Scores assigned including Completenss, Correctness, Compliance.
