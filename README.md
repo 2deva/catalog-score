@@ -4,7 +4,7 @@
 ## For this Project We took "Meesho"(https://ondc.meesho.org/) as our client. We Scored Products from the perspective of Meesho Buyer App. 
     --> our website has three pages.
         --> First page shows the complete product details and Scores assigned including Completenss, Correctness, Compliance.
-            -->In this page we can put product URL from (https://ondc.meesho.org/).It'll show that product details and score. 
+            -->In this page we can put any product URL from (https://ondc.meesho.org/).It'll show that product details and score.
         -->Secong Page is used to scrape the Seller Catalog, Since Seller is only found upon searching in ONDC, 
             • We thought, as of now scraping is best way to collect seller data for scoring.
                 Example of Seller catalog URL: https://ondc.meesho.org/seller/slrp-1336654.
