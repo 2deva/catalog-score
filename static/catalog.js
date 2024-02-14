@@ -20,7 +20,7 @@ fetch('/get_collections')
     .then(data => {
         const selectElement = document.getElementById('collection_name');
         // Clear any existing options
-        selectElement.innerHTML = '<option value="" selected>Select Collection</option>'; // Empty option
+        selectElement.innerHTML = '<option value="" selected>Select Catalog</option>'; // Empty option
         // Populate options with collection names
         data.forEach(collection => {
             const option = document.createElement('option');
@@ -77,12 +77,6 @@ selectElement.addEventListener('change', function() {
     form.submit();
 });
 
-
-
-
-
-
-
 // Function to show product details in modal
 function showProductDetails(productId, collectionName) {
     // Fetch product details from the database using AJAX
@@ -120,3 +114,94 @@ function closeProductModal() {
     var modal = document.getElementById('product-modal');
     modal.style.display = 'none'; // Hide modal
   }
+
+
+
+
+// JavaScript code in catalog.js
+// Function to fetch aggregate scores for the current collection
+function fetchAggregateScores() {
+    // Get the current collection name from local storage
+    const currentCollection = localStorage.getItem('currentCollection');
+
+    // If a current collection is stored in local storage, fetch its aggregate scores
+    if (currentCollection) {
+        fetch(`/get_aggregate_scores?collection_name=${currentCollection}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Once data is fetched, display the pie chart
+                displayCircles(data);
+            })
+            .catch(error => console.error('Error fetching aggregate scores:', error));
+    } else {
+        console.error('Current collection not found in local storage.');
+    }
+}
+
+function displayCircles(data) {
+    console.log('Data received:', data);
+
+    if (data && data.aggregate_scores) {
+        const aggregateScores = data.aggregate_scores;
+        const completenessPercentage = aggregateScores.average_completeness_score;
+        const correctnessPercentage = aggregateScores.average_correctness_score;
+        const compliancePercentage = aggregateScores.average_compliance_score;
+
+        const circleContainer = document.getElementById('circle-container');
+        circleContainer.innerHTML = '';
+
+        const getColorClass = (percentage) => {
+            if (percentage >= 70) {
+                return 'green';
+            } else if (percentage >= 40) {
+                return 'yellow';
+            } else {
+                return 'red';
+            }
+        };
+
+        const createCircle = (percentage, colorClass, name) => {
+            const circle = document.createElement('div');
+            circle.classList.add('circle', colorClass);
+
+            const percentageText = document.createElement('div');
+            percentageText.classList.add('percentage');
+            const roundedPercentage = Math.round(percentage);
+            percentageText.textContent = `${roundedPercentage}%`;
+
+            const nameText = document.createElement('div');
+            nameText.classList.add('name');
+            nameText.textContent = name;
+
+            circle.appendChild(percentageText);
+            circle.appendChild(nameText);
+
+            return circle;
+        };
+
+        const completenessCircle = createCircle(completenessPercentage, getColorClass(completenessPercentage), 'Completeness');
+        const correctnessCircle = createCircle(correctnessPercentage, getColorClass(correctnessPercentage), 'Correctness');
+        const complianceCircle = createCircle(compliancePercentage, getColorClass(compliancePercentage), 'Compliance');
+
+        circleContainer.appendChild(completenessCircle);
+        circleContainer.appendChild(correctnessCircle);
+        circleContainer.appendChild(complianceCircle);
+
+        document.getElementById('aggregate-scores-modal').style.display = 'block';
+    } else {
+        console.error('Invalid data received:', data);
+    }
+}
+// Function to close the modal
+function closeModal() {
+    var modal = document.getElementById('aggregate-scores-modal');
+    modal.style.display = 'none';
+}
+
+
+
