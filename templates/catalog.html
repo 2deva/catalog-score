@@ -10,48 +10,64 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Commissioner:200,300,400,500,600,700&display=swap">
   </head>
 <body>
-<div class="container">
+    <div class="container">
         <!-- Title Container -->
         <div class="title-container">
             <h1><a href="https://catalogscore.site" style="text-decoration: none; color: inherit;">Cata<span class="log">log</span> Score<span style="font-size: 25px;">.site</span></a></h1>
         </div>
-    
         <!-- Navigation Bar -->
         <nav id="navbar">
             <ul>
                 <li><a href="/"><span class="material-icons">home</span> Home</a></li>
                 <!-- Add more list items as needed -->
-                    <li>
-            <!-- Catalog Form -->
-            <form id="catalogs-form" class="search-form" action="/catalog" method="post">
-                <label for="collection_name"></label>
-                <select name="collection_name" id="collection_name" class="select-box">
-                    <!-- Options will be populated dynamically -->
-                </select>        
-
-            </form>
+                <li>
+                    <!-- Catalog Form -->
+                    <form id="catalogs-form" class="search-form" action="/catalog" method="post">
+                        <label for="collection_name"></label>
+                        <select name="collection_name" id="collection_name" class="select-box">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </form>
+                </li>
                 <!-- Current Collection -->
-               <li>Collection:<span id="current-collection"> </span> </li>
-        </ul>
-            </nav>
-
-    <!-- Toggle button with Google Fonts icon -->
-    <button class="toggle-view-button" id="toggle-view-button" onclick="toggleView()">Table View</button>
-    <!-- Container for products -->
-    <div id="product-container" class="container">
-        <!-- Product tiles -->
-        {% for product in catalog_data %}
-        <div class="product-tile" id="product-{{ product._id }}">
-            <img src="{{ product.image.url1.url }}" alt="Product Image">
-            <h2>{{ product.title }}</h2>
-            <p>Seller: {{ product.seller_name }}</p>
-            <p> Product Score: {{ product.scores.total_score }}</p>
-            <button class="details-button" onclick="showProductDetails('{{ product._id }}', '{{ collection_name }}')">Details</button>
+                <li>Collection:<span id="current-collection"> </span> </li>
+                    </ul>
+        </nav>
+    
+        <!-- Toggle button with Google Fonts icon -->
+        <button class="toggle-view-button" id="toggle-view-button" onclick="toggleView()">
+            <span class="material-icons" title="Table View">table_view</span>
+        </button>
+        <button class="fetch-aggregate-scores-button" id="fetch-aggregate-scores-button" onclick="fetchAggregateScores()">
+            <span class="material-icons" title="Aggregate Scores">data_usage</span>
+        </button>
+       
+            <!-- Container for products -->
+        <div id="product-container" class="container">
+            <!-- Product tiles -->
+            {% for product in catalog_data %}
+            <div class="product-tile" id="product-{{ product._id }}">
+                <img src="{{ product.image.url1.url }}" alt="Product Image">
+                <h2>{{ product.title }}</h2>
+                <p>Seller: {{ product.seller_name }}</p>
+                <p> Product Score: {{ product.scores.total_score }}</p>
+                <button class="details-button" onclick="showProductDetails('{{ product._id }}', '{{ collection_name }}')">Details</button>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+    
+
+<!-- Modal for displaying aggregate scores -->
+<div id="aggregate-scores-modal" class="score-modal">
+    <div class="score-modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="circle-container">
+            <!-- Pie chart for aggregate scores will be displayed here -->
+        </div>
+    </div>
+</div>
     </div>
     
-      
     
     <!-- Product list -->
     <div id="product-list" class="product-list hidden">
@@ -89,5 +105,4 @@
 
   <script src="{{ url_for('static', filename='catalog.js') }}"></script>
 </body>
-
 </html>
