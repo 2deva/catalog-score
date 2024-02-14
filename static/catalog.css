@@ -120,19 +120,36 @@ font-weight: 600;
 .toggle-view-button {
     background-color: #ffffff; /* Dark gray background */
     color: rgb(0, 0, 0); /* White text */
-    padding: 10px 20px; /* Padding around the text */
-    border: 1px solid #000000; /* No border */
+    padding: 8px 20px; /* Padding around the text */
+    border: 1.5px solid #000000; /* No border */
     border-radius: 15px; /* Rounded corners */
     cursor: pointer; /* Cursor changes to a hand when hovered over */
-    font-size: 20px; /* Font size */
+    font-size: 15px; /* Font size */
     transition: background-color 0.3s; /* Smooth transition for the background color */
     position: absolute; /* Position the button absolutely */
-    top: 70px; /* Distance from the top */
-    right: 90px; /* Distance from the right */
+    top: 90px; /* Distance from the top */
+    right: 165px; /* Distance from the right */
 }
 
 .toggle-view-button:hover {
-    background-color: #d7d7d7; /* Lighter gray background when hovered over */
+    background-color: #ffffff; /* Lighter gray background when hovered over */
+}
+
+#fetch-aggregate-scores-button{
+    background-color: #ffffff; /* Dark gray background */
+    color: rgb(0, 0, 0); /* White text */
+    padding: 8px 20px; /* Padding around the text */
+    border: 1.5px solid #000000; /* No border */
+    border-radius: 15px; /* Rounded corners */
+    cursor: pointer; /* Cursor changes to a hand when hovered over */
+    font-size: 15px; /* Font size */
+    transition: background-color 0.3s; /* Smooth transition for the background color */
+    position: absolute; /* Position the button absolutely */
+    top: 90px; /* Distance from the top */
+    right: 240px; /* Distance from the right */
+}
+#fetch-aggregate-scores-button:hover{
+    background-color: #ffffff; /* Lighter gray background when hovered over */
 }
 
 /* CSS for list view */
@@ -148,14 +165,14 @@ font-weight: 600;
 }
 
 .product-list th {
-    background-color: #242424;
-    color: rgb(0, 0, 0);
+    background-color: #000000;
+    color: rgb(255, 255, 255);
     padding: 10px;
     text-align: center;
 }
 
 .product-list td {
-    border: 1px solid #282828; /* Light gray border */
+    border: 1px solid #000000; /* Light gray border */
     padding: 10px;
     text-align: left; /* Align text to the left */
 }
@@ -211,6 +228,8 @@ font-weight: 600;
     background-color: #ffffff
 
 }
+
+
 .modal {
     display: none; /* Hide modal by default */
     position: fixed; /* Position the modal */
@@ -230,7 +249,28 @@ font-weight: 600;
     width: 80%; /* Width of the modal */
     border-radius: 10px; /* Rounded corners */
 }
+/* Style for modal */
+.score-modal {
+    display: none; /* Hide modal by default */
+    position: fixed; /* Position the modal */
+    z-index: 1; /* Set the z-index to make sure it appears on top of other elements */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scrolling */
+    background-color: rgba(84, 84, 84, 0.5); /* White background with 50% opacity */
+}
 
+/* Style for modal content */
+.score-modal-content {
+    background-color: rgba(214, 212, 212, 1); /* White background with 50% opacity */
+    margin: 10% auto; /* Center the modal vertically and horizontally */
+    padding: 20px;
+    border: 1px solid #6ab179; /* Border around the modal */
+    width: 80%; /* Width of the modal */
+    border-radius: 10px; /* Rounded corners */
+}
 
 /* Style the close icon */
 .close {
@@ -240,6 +280,54 @@ font-weight: 600;
     font-size: 45px;
     color: #000000;
     cursor: pointer;
+}
+/* Style for circle container */
+#circle-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+/* Style for circle container */
+#circle-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+/* Style for circles */
+.circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 10px;
+    position: relative;
+}
+
+/* Style for percentage text */
+.percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Additional styling based on percentage colors */
+/* Green color for percentage >= 70% */
+.circle.green {
+    border: 10px solid rgb(74, 145, 74);
+}
+
+/* Yellow color for percentage between 40% and 70% */
+.circle.yellow {
+    border: 10px solid rgb(197, 197, 89);
+}
+
+/* Red color for percentage < 40% */
+.circle.red {
+    border: 10px solid rgb(203, 105, 105);
 }
 
 /* Change color of close icon on hover */
