@@ -3,7 +3,7 @@ import tempfile
 import cv2  # Import opencv-python
 import uuid  # Import uuid for generating unique file names
 import requests
-
+from pymongo import MongoClient
 
 def download_image(url):
     try:
@@ -44,7 +44,9 @@ def get_image_info(temp_file_path):
         return None
     
 def score_title(title):
-    title_score = 100 if title and len(title) > 0 and title != 'NA' else 0
+    title_score = 0
+    title_score += 50 if title and len(title) > 0 and title != 'NA' else 0
+    title_score += 50 if len(title) > 10 else 0
     return title_score
 
 def score_price(price):
@@ -55,44 +57,73 @@ def score_seller(seller):
     seller_score = 100 if seller and len(seller) > 0 and seller != 'NA' else 0
     return seller_score
 
+def isUnique(images):
+    seen = set()
+    for string in images:
+        if string in seen:
+            return False
+        seen.add(string)
+    return True
+
 def score_image(images):
-    image_urls = [value['url'] for value in images.values()]
     image_score = 0
-    ppi_score = 0
+    image_urls = [value['url'] for value in images.values()]
+    if isUnique(image_urls):
+        ppi_score = 0
+        
+        if image_urls:
+            for image_url in image_urls:
+                temp_file_path = download_image(image_url)
+                image_ppi = get_image_info(temp_file_path)
+                if image_ppi and image_ppi > 72:
+                    ppi_score += 0.5
+                print("PPI Score:", ppi_score)
+                os.remove(temp_file_path)
+        if len(image_urls) >= 1:
+            image_score += 40
 
-    if image_urls:
-        for image_url in image_urls:
-            temp_file_path = download_image(image_url)
-            image_ppi = get_image_info(temp_file_path)
-            if image_ppi and image_ppi > 72:
-                ppi_score += 0.5
+        if len(image_urls) >= 2:
+            image_score += 30
 
-    if len(image_urls) >= 1:
-        image_score += 50
-
-    if len(image_urls) >= 2:
-        image_score += 20
-
-    if ppi_score >= 1:
-        image_score += 30
-
+        if ppi_score >= 1:
+            image_score += 30
+    print("Image Score:", image_score)
     return image_score
-    
+
 def score_details(details):
     details_score = 0
     total = 0
     for key, value in details.items():
         if key != "Nutritional Info" and key != "Additives Info":
             if value is not None and value != 'NA':
-                details_score+=1
+                if key == "Product Description":
+                    details_score += 1 if len(value) > 15 else 0
+                elif key == "Long Desc":
+                    details_score += 1 if len(value) > 20 else 0
+                elif key == "Customer Support":
+                    lowercase_input = value.lower()
+                    words = lowercase_input.split()
+                    support = False
+                    for word in words:
+                        if word != "support":
+                            support = True
+                    if support:
+                        if '@' in value:
+                            details_score += 1
+                elif key == "Short Desc":
+                    details_score += 1 if len(value) > 10 else 0
+                elif key == "Customer Support Phone":
+                    details_score += 1 if any(char.isdigit() for char in value) else 0
+                else:
+                    details_score += 1
             total+=1
-    details_score = int((details_score/total)*100)
+    details_score = round((details_score/total)*100)
     return details_score
 
 def completenessScoring(product_data):
 
     complete = 0
-    total = -3
+    total = -2
 
     for key, value in product_data.items():
         if key != '_id' and key != "product_url":
@@ -110,15 +141,19 @@ def completenessScoring(product_data):
                             complete+=1
                         total+=1
         total+=1
-    return round(complete/total)*100
 
+    completenessScore = round((complete/total)*100)
+    return completenessScore
 def complianceScoring(product_data):
 
     compliant = 0
+    add = 0
 
     for key, value in product_data.items():
         if key == 'product_details' and isinstance(value, dict):
             for nested_key, nested_value in value.items():
+                if nested_key == "Ondc Category Id" and (nested_value == "F&B" or nested_value == "Grocery"):
+                    add = 2
                 if nested_key == "Imported Product Country Of Origin" and nested_value is not None and nested_value != 'NA':
                     compliant+=1
                 elif nested_key == "Manufacturer Name" and nested_value is not None and nested_value != 'NA':
@@ -134,7 +169,8 @@ def complianceScoring(product_data):
                 elif nested_key == "Additives Info" and nested_value is not None and nested_value != 'NA':
                     compliant+=1
 
-    return round(compliant/7)*100
+    complianceScore = round((compliant/5+add)*100)
+    return complianceScore
 
 def correctnessScoring(product_data):
 
@@ -144,14 +180,16 @@ def correctnessScoring(product_data):
     s4 = score_image(product_data['image'])
     s5 = score_details(product_data['product_details'])
 
-    correctness = round (s1*0.2 + s2*0.1 + s3*0.1 + s4*0.3 + s5*0.3)
+    correctness = round(s1*0.1 + s2*0.05 + s3*0.05 + s4*0.3 + s5*0.5)
 
-    return int(correctness)
+    correctnessScore = round(correctness)
+    return correctnessScore
+
 def score_product(product_data):
     completenesScore = completenessScoring(product_data)
     correctnessScore = correctnessScoring(product_data)
     complianceScore = complianceScoring(product_data)
-    totalScore = int(completenesScore*0.5 + correctnessScore*0.3 + complianceScore*0.2)
+    totalScore = round(completenesScore*0.2 + correctnessScore*0.4 + complianceScore*0.4)
     print(product_data['title'])
     product_score = {
         'completeness_score': completenesScore,
@@ -159,4 +197,6 @@ def score_product(product_data):
         'compliance_score': complianceScore,
         'total_score': totalScore
     }
+    print("product_score:",product_score)
     return product_score
+
